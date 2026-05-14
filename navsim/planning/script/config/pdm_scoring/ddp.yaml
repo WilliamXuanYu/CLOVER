@@ -1,0 +1,33 @@
+dataloader:
+  params:
+#    train
+    batch_size: 32  # number of samples per batch
+    num_workers: 4  # number of workers for data loading
+    pin_memory: true  # pin memory for faster GPU transfer
+    prefetch_factor: 1
+#    debug
+#    batch_size: 4  # number of samples per batch
+#    num_workers: 0  # number of workers for data loading
+#    pin_memory: false  # pin memory for faster GPU transfer
+#    prefetch_factor: 2  # number of samples loaded in advance by each worker
+
+trainer:
+  params:
+    max_epochs: 1
+    check_val_every_n_epoch: 1
+    val_check_interval: 1.0
+
+    limit_train_batches: 1.0
+    limit_val_batches: 1.0
+
+    accelerator: gpu
+    strategy: auto
+    precision: 32
+    num_nodes: 1
+
+    num_sanity_val_steps: 0
+    fast_dev_run: false
+
+    accumulate_grad_batches: 1
+    gradient_clip_val: 0.0
+    gradient_clip_algorithm: norm

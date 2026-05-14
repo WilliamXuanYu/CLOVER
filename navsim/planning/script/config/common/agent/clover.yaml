@@ -1,0 +1,103 @@
+_target_: navsim.agents.clover.drivor_agent.DrivoRAgent
+
+trajectory_sampling:
+  _target_: nuplan.planning.simulation.trajectory.trajectory_sampling.TrajectorySampling
+  _convert_: 'all'
+  time_horizon: 4
+  interval_length: 0.5
+
+config:
+  b2d: false
+  shared_refiner: false
+  ref_num: 4
+  scorer_ref_num: 4
+  proposal_num: 64
+  num_poses: 8
+  num_scene_tokens: 16
+  one_token_per_traj: true
+  full_history_status: false
+  long_trajectory_additional_poses: -1
+
+  noc: 1.0
+  dac: 1.0
+  ddc: 0.0
+  ttc: 5.0
+  ep: 5.0
+  comfort: 2.0
+  pseudo_expert_pkl: ""
+
+  pdm_score_temperature_noc: 1.0
+  pdm_score_temperature_dac: 1.0
+  pdm_score_temperature_ddc: 1.0
+  pdm_score_temperature_ep: 1.0
+  pdm_score_temperature_ttc: 1.0
+  pdm_score_temperature_comfort: 1.0
+
+  tf_d_model: 256
+  tf_d_ffn: 1024
+
+  cam_f0: [3]
+  cam_l0: [3]
+  cam_l1: []
+  cam_l2: []
+  cam_r0: [3]
+  cam_r1: []
+  cam_r2: []
+  cam_b0: [3]
+  lidar_pc: []
+
+  image_size: [1148, 672]
+  image_backbone:
+    model_name: timm/vit_small_patch14_reg4_dinov2.lvd142m
+    model_weights: ${oc.env:CLOVER_IMAGE_BACKBONE_WEIGHTS,weights/vit_small_patch14_reg4_dinov2.lvd142m/model.safetensors}
+    use_lora: true
+    finetune: false
+    lora_rank: 32
+    focus_front_cam: false
+    use_feature_pooling: false
+    compress_fc: false
+
+  lidar_min_x: -35
+  lidar_max_x: 35
+  lidar_min_y: -35
+  lidar_max_y: 35
+  lidar_image_size: [518, 518]
+  lidar_hist_max_per_pixel: 5
+  lidar_max_height: 100.0
+  lidar_split_height: 0.2
+  lidar_use_ground_plane: true
+  lidar_backbone:
+    model_name: timm/vit_small_patch14_reg4_dinov2.lvd142m
+    model_weights: ${oc.env:CLOVER_LIDAR_BACKBONE_WEIGHTS,weights/vit_small_patch14_reg4_dinov2.lvd142m/model.safetensors}
+    use_lora: true
+    finetune: false
+    lora_rank: 32
+    in_chans: 2
+
+  double_score: false
+  agent_pred: false
+  area_pred: false
+  bev_map: false
+  bev_agent: false
+  refiner_num_heads: 1
+  refiner_ls_values: 0.0
+
+  trajectory_sampling:
+    _target_: nuplan.planning.simulation.trajectory.trajectory_sampling.TrajectorySampling
+    time_horizon: 4
+    interval_length: 0.5
+
+loss: null
+
+checkpoint_path: ""
+lr_args:
+  name: AdamW
+  base_lr: 5e-4
+  base_batch_size: 64
+scheduler_args:
+  num_epochs: ${oc.select:trainer.params.max_epochs,10}
+  dataset_size: 85000
+
+batch_size: ${oc.select:dataloader.params.batch_size,16}
+num_gpus: 1
+progress_bar: true
