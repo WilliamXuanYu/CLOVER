@@ -1,21 +1,33 @@
 # CLOVER
 
+<p align="center">
+  <img src="fig/image1.png" alt="Pipeline">
+</p>
+
 End-to-end autonomous driving planners are commonly trained by imitating a single logged trajectory, yet they are evaluated by rule-based planning metrics that measure safety, feasibility, progress, and comfort. This creates a training-evaluation mismatch: trajectories close to the logged path may still violate planning rules, while alternative trajectories farther from the demonstration can remain valid and high-scoring. The mismatch is especially limiting for proposal-selection planners, whose performance depends on both candidate-set coverage and scorer ranking quality. We propose **CLOVER**, a **C**losed-**LO**op **V**alue **E**stimation and **R**anking framework for end-to-end driving planning. CLOVER first expands single-trajectory imitation into set-level proposal coverage by constructing evaluator-filtered pseudo-expert trajectories. It then performs conservative closed-loop self-distillation: a trajectory-level scorer is fitted to true evaluator sub-scores on generated proposals, while the generator is refined toward teacher-selected top-k and vector-Pareto proposal targets with stability regularization. We also analyze when an imperfect scorer can improve the generator, showing that scorer-mediated refinement is reliable under local scorer accuracy, conservative updates, and selected-set enrichment.
 
 ## TODO
 
-1. Release paper
-2. Release inference code and scripts
-3. Release full training scripts
+- [x] Release paper
+- [x] Release inference code, scripts, and ckpt
+- [ ] Release full training scripts
+
+## Diversity Visualization
+
+<p align="center">
+  <img src="fig/diversity_visualization_appendix.png" alt="Diversity visualization appendix">
+</p>
 
 ## Data and Weights
 
 Please prepare the NAVSIM-v1 dataset following the official NAVSIM layout, including:
 
-- `OPENSCENE_DATA_ROOT/navsim_logs/test`
-- `OPENSCENE_DATA_ROOT/sensor_blobs/test`
-- `NUPLAN_MAPS_ROOT`
-- `METRIC_CACHE_PATH/metadata/...`
+- `export NUPLAN_MAP_VERSION="nuplan-maps-v1.0"`
+- `export NUPLAN_MAPS_ROOT="$HOME/navsim_workspace/dataset/maps"`
+- `export NAVSIM_EXP_ROOT="$HOME/navsim_workspace/exp"`
+- `export NAVSIM_DEVKIT_ROOT="$HOME/navsim_workspace/navsim"`
+- `export OPENSCENE_DATA_ROOT="$HOME/navsim_workspace/dataset"`
+- `METRIC_CACHE_PATH/...`
 
 For the visual backbone, download the DINOv2 ViT-S weights from:
 
@@ -108,9 +120,3 @@ Outputs are written to:
 
 - `${NAVSIM_EXP_ROOT}/ke/${EXPERIMENT}/...`
 - `${SUBSCORE_PATH}/navsim1_pdm_scores/${EXPERIMENT}/...`
-
-## Local Test Script
-
-For local verification on the current cluster, see:
-
-- `scripts/run_clover_navtest_local.sh`

@@ -16,3 +16,5 @@ weights/**/*.ckpt
 *.pkl
 *.csv
 *.pt
+
+fig/pseudo_expert_visualization.png
