@@ -20,6 +20,10 @@ End-to-end autonomous driving planners are commonly trained by imitating a singl
 
 ## Data and Weights
 
+Pretrained checkpoints and release assets are available at:
+
+- `https://github.com/WilliamXuanYu/CLOVER/releases`
+
 Please prepare the NAVSIM-v1 dataset following the official NAVSIM layout, including:
 
 - `export NUPLAN_MAP_VERSION="nuplan-maps-v1.0"`
@@ -44,6 +48,10 @@ The default expected file is:
 You can also override the backbone weight path with:
 
 - `CLOVER_IMAGE_BACKBONE_WEIGHTS`
+
+Download the released CLOVER checkpoint from:
+
+- `https://github.com/WilliamXuanYu/CLOVER/releases`
 
 ## Installation
 
@@ -93,6 +101,10 @@ export EXPERIMENT="clover_navtest"
 ```
 
 ## Evaluation
+
+Before evaluation, download the released checkpoint from:
+
+- `https://github.com/WilliamXuanYu/CLOVER/releases`
 
 Current public evaluation entrypoint:
 
