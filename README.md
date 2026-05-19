@@ -6,6 +6,8 @@
 
 End-to-end autonomous driving planners are commonly trained by imitating a single logged trajectory, yet they are evaluated by rule-based planning metrics that measure safety, feasibility, progress, and comfort. This creates a training-evaluation mismatch: trajectories close to the logged path may still violate planning rules, while alternative trajectories farther from the demonstration can remain valid and high-scoring. The mismatch is especially limiting for proposal-selection planners, whose performance depends on both candidate-set coverage and scorer ranking quality. We propose **CLOVER**, a **C**losed-**LO**op **V**alue **E**stimation and **R**anking framework for end-to-end driving planning. CLOVER first expands single-trajectory imitation into set-level proposal coverage by constructing evaluator-filtered pseudo-expert trajectories. It then performs conservative closed-loop self-distillation: a trajectory-level scorer is fitted to true evaluator sub-scores on generated proposals, while the generator is refined toward teacher-selected top-k and vector-Pareto proposal targets with stability regularization. We also analyze when an imperfect scorer can improve the generator, showing that scorer-mediated refinement is reliable under local scorer accuracy, conservative updates, and selected-set enrichment.
 
+Paper: `https://arxiv.org/abs/2605.15120`
+
 ## TODO
 
 - [x] Release paper
@@ -15,7 +17,7 @@ End-to-end autonomous driving planners are commonly trained by imitating a singl
 - [ ] Release pseudo-expert trajectory generation code and NAVSIM-v2 evaluation scripts
 
 > **Note [1]**
-> To facilitate early community discussion and reproduction, we release this preview version of the training scripts first. This preview may still contain unfinished details, deprecated interfaces, or fixed-path assumptions. These issues will be cleaned up in the formal release.
+> To facilitate early community discussion and reproduction, we release this preview version of the training scripts first. This preview may still contain unfinished details, deprecated interfaces, or fixed-path assumptions. These issues will be cleaned up in the formal release. The epoch schedule may also differ slightly from the final paper setup. In the current stage-2 preview we default to 30 alternating cycles (30 x 2 epochs in total). Empirically, the best checkpoint is often reached around 20 to 30 epochs, but iterative alternating training can occasionally be unstable, and an early score drop during the first several epochs is normal. We therefore keep a longer default schedule in the preview release.
 
 ## Diversity Visualization
 
