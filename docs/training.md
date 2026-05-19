@@ -35,6 +35,10 @@ For stage-1 multi-expert training, also prepare:
 export PSEUDO_EXPERT_PKL="/PATH/TO/pseudo_expert.pkl"
 ```
 
+The stage-1 multi-expert pipeline depends on evaluator-filtered pseudo-expert trajectories. The released pseudo-expert package is distributed via:
+
+- `https://drive.google.com/drive/folders/1oNTv5Pe-naw_i81rqaKk8KIs0VcUqGZ-?usp=drive_link`
+
 ## Step 1: Cache Train Metrics
 
 The train metric cache is required before training because CLOVER computes real PDM-aligned supervision during optimization.

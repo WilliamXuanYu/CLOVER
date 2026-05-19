@@ -11,7 +11,7 @@ End-to-end autonomous driving planners are commonly trained by imitating a singl
 - [x] Release paper
 - [x] Release inference code, scripts, and ckpt
 - [x] Release preview training scripts
-- [ ] Release full training code
+- [ ] Release official training code
 - [ ] Release pseudo-expert trajectory generation code and NAVSIM-v2 evaluation scripts
 
 <sup>Note: To facilitate early community discussion and reproduction, we release this preview version of the training scripts first. This preview may still contain unfinished details, deprecated interfaces, or fixed-path assumptions. These issues will be cleaned up in the formal release.</sup>
@@ -26,6 +26,7 @@ End-to-end autonomous driving planners are commonly trained by imitating a singl
 
 - Checkpoints and release assets: `https://github.com/WilliamXuanYu/CLOVER/releases`
 - DINOv2 ViT-S backbone weights: `https://huggingface.co/timm/vit_small_patch14_reg4_dinov2.lvd142m/tree/main`
+- Stage-1 pseudo-expert trajectory package: `https://drive.google.com/drive/folders/1oNTv5Pe-naw_i81rqaKk8KIs0VcUqGZ-?usp=drive_link`
 
 ## Installation
 
