@@ -47,6 +47,12 @@ def initialize_ray(
     # Read number of CPU cores on current machine
     number_of_cpus_per_node = threads_per_node if threads_per_node else cpu_count(logical=True)
     number_of_gpus_per_node = 0  # no cuda support
+    ray_temp_dir = os.getenv("RAY_TMPDIR", "").strip() or os.getenv("TMPDIR", "").strip()
+    init_kwargs = dict(local_mode=local_mode, log_to_driver=log_to_driver)
+    if ray_temp_dir:
+        Path(ray_temp_dir).mkdir(parents=True, exist_ok=True)
+        init_kwargs["_temp_dir"] = ray_temp_dir
+        logger.info("Using RAY_TMPDIR=%s", ray_temp_dir)
     if not number_of_gpus_per_node:
         logger.info("Not using GPU in ray")
 
@@ -54,7 +60,7 @@ def initialize_ray(
     if master_node_ip and use_distributed:
         # Connect to ray remotely to node ip
         logger.info(f"Connecting to cluster at: {master_node_ip}!")
-        ray.init(address=f"ray://{master_node_ip}:10001", local_mode=local_mode, log_to_driver=log_to_driver)
+        ray.init(address=f"ray://{master_node_ip}:10001", **init_kwargs)
         number_of_nodes = 1
     elif env_var_master_node_ip in os.environ and use_distributed:
         # In this way, we started ray on the current machine which generated password and master node ip:
@@ -68,8 +74,7 @@ def initialize_ray(
             address="auto",
             _node_ip_address=master_node_ip,
             _redis_password=redis_password,
-            log_to_driver=log_to_driver,
-            local_mode=local_mode,
+            **init_kwargs,
         )
     else:
         # In this case, we will just start ray directly from this script
@@ -78,8 +83,7 @@ def initialize_ray(
         ray.init(
             num_cpus=number_of_cpus_per_node,
             dashboard_host="0.0.0.0",
-            local_mode=local_mode,
-            log_to_driver=log_to_driver,
+            **init_kwargs,
         )
 
     return WorkerResources(

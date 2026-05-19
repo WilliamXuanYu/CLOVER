@@ -1,4 +1,4 @@
-_target_: navsim.agents.clover.drivor_agent.DrivoRAgent
+_target_: navsim.agents.clover.drivor_stage2_agent.DrivoRStage2Agent
 
 trajectory_sampling:
   _target_: nuplan.planning.simulation.trajectory.trajectory_sampling.TrajectorySampling
@@ -17,7 +17,6 @@ config:
   one_token_per_traj: true
   full_history_status: false
   long_trajectory_additional_poses: -1
-
   noc: 1.0
   dac: 1.0
   ddc: 0.0
@@ -25,17 +24,8 @@ config:
   ep: 5.0
   comfort: 2.0
   pseudo_expert_pkl: ""
-
-  pdm_score_temperature_noc: 1.0
-  pdm_score_temperature_dac: 1.0
-  pdm_score_temperature_ddc: 1.0
-  pdm_score_temperature_ep: 1.0
-  pdm_score_temperature_ttc: 1.0
-  pdm_score_temperature_comfort: 1.0
-
   tf_d_model: 256
   tf_d_ffn: 1024
-
   cam_f0: [3]
   cam_l0: [3]
   cam_l1: []
@@ -45,7 +35,6 @@ config:
   cam_r2: []
   cam_b0: [3]
   lidar_pc: []
-
   image_size: [1148, 672]
   image_backbone:
     model_name: timm/vit_small_patch14_reg4_dinov2.lvd142m
@@ -56,7 +45,6 @@ config:
     focus_front_cam: false
     use_feature_pooling: false
     compress_fc: false
-
   lidar_min_x: -35
   lidar_max_x: 35
   lidar_min_y: -35
@@ -73,7 +61,6 @@ config:
     finetune: false
     lora_rank: 32
     in_chans: 2
-
   double_score: false
   agent_pred: false
   area_pred: false
@@ -81,34 +68,42 @@ config:
   bev_agent: false
   refiner_num_heads: 1
   refiner_ls_values: 0.0
-
+  use_ray_for_scoring: false
+  freeze_scorer_in_stage2: false
+  freeze_backbone_in_stage2: true
+  detach_proposals_in_scorer: true
+  sanitize_proposals: true
+  proposal_xy_limit: 100.0
+  teacher_refresh_interval: 0
+  alternating_stage2: false
+  critic_phase_epochs: 1
+  generator_phase_epochs: 1
+  stage2_training_phase: generator
   trajectory_sampling:
     _target_: nuplan.planning.simulation.trajectory.trajectory_sampling.TrajectorySampling
     time_horizon: 4
     interval_length: 0.5
 
 loss:
-  _target_: navsim.agents.clover.layers.losses.drivor_loss.DrivoRLoss
-  trajectory_weight: 1.0
-  inter_weight: 0.0
-  sub_score_weight: 0.0
+  _target_: navsim.agents.clover.layers.losses.drivor_stage2_vector_pareto_loss.DrivoRStage2VectorParetoLoss
+  trajectory_weight: 0.1
+  inter_weight: 0.02
   final_score_weight: 1.0
-  pred_ce_weight: 1.0
-  pred_l1_weight: 0.1
-  pred_area_weight: 2.0
-  prev_weight: 0.0
-  agent_class_weight: 1.0
-  agent_box_weight: 0.1
-  bev_semantic_weight: 1.0
-  div_weight: 0.0
+  pareto_guidance_weight: 1.0
+  pareto_set_max_size: 8
+  pareto_min_size: 2
+  teacher_reward_threshold: 0.4
+  teacher_refresh_stability_weight: 0.05
+  stage2_training_phase: ${agent.config.stage2_training_phase}
 
-checkpoint_path: ""
+checkpoint_path: ''
+base_checkpoint_path: ''
 lr_args:
   name: AdamW
-  base_lr: 5e-4
+  base_lr: 5e-5
   base_batch_size: 64
 scheduler_args:
-  num_epochs: ${oc.select:trainer.params.max_epochs,10}
+  num_epochs: ${oc.select:trainer.params.max_epochs,5}
   dataset_size: 85000
 
 batch_size: ${oc.select:dataloader.params.batch_size,16}

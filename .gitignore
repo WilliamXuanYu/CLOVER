@@ -18,3 +18,5 @@ weights/**/*.ckpt
 *.pt
 
 fig/pseudo_expert_visualization.png
+
+scripts/*_local.sh

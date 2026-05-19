@@ -10,7 +10,11 @@ End-to-end autonomous driving planners are commonly trained by imitating a singl
 
 - [x] Release paper
 - [x] Release inference code, scripts, and ckpt
-- [ ] Release full training scripts
+- [x] Release preview training scripts
+- [ ] Release full training code
+- [ ] Release pseudo-expert trajectory generation code and NAVSIM-v2 evaluation scripts
+
+<sup>Note: To facilitate early community discussion and reproduction, we release this preview version of the training scripts first. This preview may still contain unfinished details, deprecated interfaces, or fixed-path assumptions. These issues will be cleaned up in the formal release.</sup>
 
 ## Diversity Visualization
 
@@ -18,40 +22,10 @@ End-to-end autonomous driving planners are commonly trained by imitating a singl
   <img src="fig/diversity_visualization_appendix.png" alt="Diversity visualization appendix">
 </p>
 
-## Data and Weights
+## Releases
 
-Pretrained checkpoints and release assets are available at:
-
-- `https://github.com/WilliamXuanYu/CLOVER/releases`
-
-Please prepare the NAVSIM-v1 dataset following the official NAVSIM layout, including:
-
-- `export NUPLAN_MAP_VERSION="nuplan-maps-v1.0"`
-- `export NUPLAN_MAPS_ROOT="$HOME/navsim_workspace/dataset/maps"`
-- `export NAVSIM_EXP_ROOT="$HOME/navsim_workspace/exp"`
-- `export NAVSIM_DEVKIT_ROOT="$HOME/navsim_workspace/navsim"`
-- `export OPENSCENE_DATA_ROOT="$HOME/navsim_workspace/dataset"`
-- `METRIC_CACHE_PATH/...`
-
-For the visual backbone, download the DINOv2 ViT-S weights from:
-
-- `https://huggingface.co/timm/vit_small_patch14_reg4_dinov2.lvd142m/tree/main`
-
-and place them under:
-
-- `./weights/vit_small_patch14_reg4_dinov2.lvd142m`
-
-The default expected file is:
-
-- `weights/vit_small_patch14_reg4_dinov2.lvd142m/model.safetensors`
-
-You can also override the backbone weight path with:
-
-- `CLOVER_IMAGE_BACKBONE_WEIGHTS`
-
-Download the released CLOVER checkpoint from:
-
-- `https://github.com/WilliamXuanYu/CLOVER/releases`
+- Checkpoints and release assets: `https://github.com/WilliamXuanYu/CLOVER/releases`
+- DINOv2 ViT-S backbone weights: `https://huggingface.co/timm/vit_small_patch14_reg4_dinov2.lvd142m/tree/main`
 
 ## Installation
 
@@ -70,65 +44,14 @@ If you prefer to use the vendored `nuplan-devkit` copy in this repository instea
 pip install -e ./nuplan-devkit
 ```
 
-## Environment Variables
+## Documentation
 
-Before running inference, set:
+- Training guide: [docs/training.md](docs/training.md)
+- Inference guide: [docs/inference.md](docs/inference.md)
 
-```bash
-export NUPLAN_MAP_VERSION="nuplan-maps-v1.0"
-export NUPLAN_MAPS_ROOT="/PATH/TO/clover/dataset/maps"
-export OPENSCENE_DATA_ROOT="/PATH/TO/clover/dataset"
-export NAVSIM_DEVKIT_ROOT="/PATH/TO/clover"
-export NAVSIM_EXP_ROOT="/PATH/TO/clover/exp"
-export SUBSCORE_PATH="${NAVSIM_EXP_ROOT}"
-export METRIC_CACHE_PATH="/PATH/TO/clover/metric_cache"
-export CLOVER_IMAGE_BACKBONE_WEIGHTS="/PATH/TO/model.safetensors"
-```
+## Public Entrypoints
 
-You also need to provide:
-
-```bash
-export CHECKPOINT="/PATH/TO/clover.ckpt"
-```
-
-Optional runtime controls:
-
-```bash
-export NUM_GPUS=1
-export BATCH_SIZE=64
-export NUM_WORKERS=4
-export EXPERIMENT="clover_navtest"
-```
-
-## Evaluation
-
-Before evaluation, download the released checkpoint from:
-
-- `https://github.com/WilliamXuanYu/CLOVER/releases`
-
-Current public evaluation entrypoint:
-
-```bash
-bash scripts/eval_multi_expert_navtest.sh
-```
-
-A complete example:
-
-```bash
-export NUPLAN_MAP_VERSION="nuplan-maps-v1.0"
-export NUPLAN_MAPS_ROOT="/PATH/TO/clover/dataset/maps"
-export OPENSCENE_DATA_ROOT="/PATH/TO/clover/dataset"
-export NAVSIM_DEVKIT_ROOT="/PATH/TO/clover"
-export NAVSIM_EXP_ROOT="/PATH/TO/clover/exp"
-export SUBSCORE_PATH="${NAVSIM_EXP_ROOT}"
-export METRIC_CACHE_PATH="/PATH/TO/clover/metric_cache"
-export CLOVER_IMAGE_BACKBONE_WEIGHTS="/PATH/TO/model.safetensors"
-export CHECKPOINT="/PATH/TO/clover.ckpt"
-
-bash scripts/eval_multi_expert_navtest.sh
-```
-
-Outputs are written to:
-
-- `${NAVSIM_EXP_ROOT}/ke/${EXPERIMENT}/...`
-- `${SUBSCORE_PATH}/navsim1_pdm_scores/${EXPERIMENT}/...`
+- Train metric cache: `python navsim/planning/script/run_train_metric_caching.py`
+- Stage-1 training: `bash scripts/run_training_multi_expert.sh`
+- Stage-2 training: `bash scripts/run_training_stage2_vector_pareto_alternating.sh`
+- NAVSIM-v1 evaluation: `bash scripts/eval_multi_expert_navtest.sh`

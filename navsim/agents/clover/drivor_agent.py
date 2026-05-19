@@ -144,7 +144,13 @@ class DrivoRAgent(AbstractAgent):
                     host_cpu_count,
                     reserved_cpu_headroom,
                 )
-            self.worker = RayDistributedNoTorch(threads_per_node=ray_threads)
+            ray_log_to_driver = os.getenv("RAY_LOG_TO_DRIVER", "true").strip().lower() in {
+                "1", "true", "yes", "y", "on"
+            }
+            self.worker = RayDistributedNoTorch(
+                threads_per_node=ray_threads,
+                log_to_driver=ray_log_to_driver,
+            )
             self.worker_map = worker_map
 
         from .score_module.compute_navsim_score import get_scores
