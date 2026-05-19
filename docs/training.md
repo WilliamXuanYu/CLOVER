@@ -132,21 +132,8 @@ export USE_TEST_LOGS_FOR_VAL=true
 export USE_RAY_FOR_SCORING=true
 ```
 
-If you want the per-proposal real PDM path aligned with the CSV evaluation path, enable:
-
-```bash
-export ALIGN_PKL_PDM_TO_CSV=1
-```
-
-This is slower and is disabled by default.
-
 Stage-2 checkpoints are written under:
 
 ```bash
 ${NAVSIM_EXP_ROOT}/ke/training_clover_stage2_vector_pareto_alternating/...
 ```
-
-## Notes
-
-- `scripts/run_training_multi_expert.sh` and `scripts/run_training_stage2_vector_pareto_alternating.sh` are intentionally minimal public launchers. They do not include cluster-specific keepalive, watchdog, or scheduler workarounds.
-- The released training path only includes the main stage-1 and stage-2 pipeline. Other internal ablations and side experiments are not part of this repository.

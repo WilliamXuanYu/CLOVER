@@ -10,11 +10,12 @@ End-to-end autonomous driving planners are commonly trained by imitating a singl
 
 - [x] Release paper
 - [x] Release inference code, scripts, and ckpt
-- [x] Release preview training scripts
+- [x] Release preview training scripts<sup>[1]</sup>
 - [ ] Release official training code
 - [ ] Release pseudo-expert trajectory generation code and NAVSIM-v2 evaluation scripts
 
-<sup>Note: To facilitate early community discussion and reproduction, we release this preview version of the training scripts first. This preview may still contain unfinished details, deprecated interfaces, or fixed-path assumptions. These issues will be cleaned up in the formal release.</sup>
+> **Note [1]**
+> To facilitate early community discussion and reproduction, we release this preview version of the training scripts first. This preview may still contain unfinished details, deprecated interfaces, or fixed-path assumptions. These issues will be cleaned up in the formal release.
 
 ## Diversity Visualization
 
